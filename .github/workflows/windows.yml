@@ -1,0 +1,14 @@
+name: Windows
+on:
+  - push
+jobs:
+  test:
+    name: Test
+    runs-on: windows-latest
+    steps:
+      - name: Set culture
+        run: |
+          echo $Env:PSCulture
+          Get-Culture
+          Set-Culture ja-JP
+          Get-Culture
