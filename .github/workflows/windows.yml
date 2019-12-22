@@ -10,5 +10,5 @@ jobs:
         run: |
           echo $Env:PSCulture
           Get-Culture
-          [cultureinfo]::CurrentCulture = "ja-JP"
+          [CultureInfo]::CurrentCulture = "ja-JP"
           Get-Culture
