@@ -8,7 +8,14 @@ jobs:
     steps:
       - name: Set culture
         run: |
-          echo $Env:PSCulture
           Get-Culture
           [CultureInfo]::CurrentCulture = "ja-JP"
+          Get-Culture
+      - name: Set system culture
+        run: |
+          Get-Culture
+          Set-Culture "ja-JP"
+          Get-Culture
+      - name: Show culture
+        run: |
           Get-Culture
