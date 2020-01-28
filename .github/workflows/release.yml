@@ -43,6 +43,9 @@ jobs:
               });
               return createdRelease;
             }
+      - name: Debug
+        run: |
+          echo "${{ toJSON(steps.create-release.outputs.result) }}"
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
