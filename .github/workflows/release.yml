@@ -25,22 +25,24 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const {owner: owner, repo: repo} = context.repo;
-            const {data: releases} = await github.repos.listRelease({
-              owner: owner,
-              repo: repo,
-            });
-            const release = releases.find((release) => {
-              release.tag_name == "${{ github.ref }}";
-            });
-            if (release) {
-              return release;
-            }
-            return github.repos.createRelease({
-              owner: owner,
-              repo: repo,
-              tag_name: "${{ github.ref }}";
-            });
+            (async () => {
+              const {owner: owner, repo: repo} = context.repo;
+              const {data: releases} = await github.repos.listRelease({
+                owner: owner,
+                repo: repo,
+              });
+              const release = releases.find((release) => {
+                release.tag_name == "${{ github.ref }}";
+              });
+              if (release) {
+                return release;
+              }
+              return await github.repos.createRelease({
+                owner: owner,
+                repo: repo,
+                tag_name: "${{ github.ref }}";
+              });
+            })();
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
