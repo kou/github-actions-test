@@ -1,0 +1,33 @@
+name: Release
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create assets
+        run: |
+          touch hello.txt
+          mkdir -p sub
+          touch sub/hello.txt
+          tar czf hello.tar.gz hello.txt sub
+      - name: Create release
+        id: create-release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+      - name: Upload release
+        uses: actions/upload-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: hello.tar.gz
+          asset_name: hello.tar.gz
+          asset_content_type: application/gzip
