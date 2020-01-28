@@ -14,6 +14,7 @@ jobs:
           - hello2
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
       - name: Create assets
         run: |
           touch ${{ matrix.id }}.txt
