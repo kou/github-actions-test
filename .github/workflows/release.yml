@@ -27,7 +27,7 @@ jobs:
           script: |
             (async () => {
               const {owner: owner, repo: repo} = context.repo;
-              const {data: releases} = await github.repos.listRelease({
+              const {data: releases} = await github.repos.listReleases({
                 owner: owner,
                 repo: repo,
               });
