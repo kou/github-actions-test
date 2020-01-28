@@ -34,7 +34,7 @@ jobs:
               });
               console.log(releases);
               const release = releases.find((release) => {
-                release.tag_name === "${{ github.ref }}";
+                release.tag_name === "ref/tags/${{ github.ref }}";
               });
               if (release) {
                 return release;
