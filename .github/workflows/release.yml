@@ -7,6 +7,7 @@ jobs:
   test:
     name: Test
     strategy:
+      fail-fast: false
       matrix:
         id:
           - hello1
@@ -31,8 +32,9 @@ jobs:
                 owner: owner,
                 repo: repo,
               });
+              console.log(releases);
               const release = releases.find((release) => {
-                release.tag_name == "${{ github.ref }}";
+                release.tag_name === "${{ github.ref }}";
               });
               if (release) {
                 return release;
@@ -47,13 +49,12 @@ jobs:
         run: |
           echo "${{ toJson(steps.create-release) }}"
           echo "${{ steps.create-release.outputs.result }}"
-          echo "${{ steps.create-release.result }}"
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.result.upload_url }}
+          upload_url: ${{ steps.create-release.outputs.result.upload_url }}
           asset_path: ${{ matrix.id }}.tar.gz
           asset_name: ${{ matrix.id }}.tar.gz
           asset_content_type: application/gzip
