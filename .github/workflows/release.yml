@@ -27,12 +27,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const {owner: owner, repo: repo} = context.repo;
-            const {data: releases} = await github.repos.listReleases({
+            const tag = "${{ github.ref }}".replace("refs/tags/", "")
+            const {data: release} = await github.repos.getReleaseByTag({
               owner: owner,
               repo: repo,
-            });
-            const release = releases.find((release) => {
-              release.tag_name === "${{ github.ref }}";
+              tag: tag
             });
             if (release) {
               return release;
@@ -40,7 +39,7 @@ jobs:
             const {data: createdRelease} = await github.repos.createRelease({
               owner: owner,
               repo: repo,
-              tag_name: "${{ github.ref }}".replace("refs/tags/", "")
+              tag_name: tag
             });
             return createdRelease;
       - name: Upload release
