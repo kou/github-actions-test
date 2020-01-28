@@ -43,6 +43,9 @@ jobs:
                 tag_name: "${{ github.ref }}"
               });
             })();
+      - name: Show output
+        runs: |
+          echo "${{ steps.create-release.result }}"
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
