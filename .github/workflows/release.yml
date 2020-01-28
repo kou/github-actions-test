@@ -22,10 +22,11 @@ jobs:
           tar czf ${{ matrix.id }}.tar.gz ${{ matrix.id }}.txt sub
       - name: Ensure creating release
         id: create-release
-        uses: actions/github-script@master
+        uses: actions/github-script@0.4.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            return {xxx: 111}
             const {owner: owner, repo: repo} = context.repo;
             const {data: releases} = await github.repos.listReleases({
               owner: owner,
