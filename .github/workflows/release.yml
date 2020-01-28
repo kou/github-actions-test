@@ -25,6 +25,7 @@ jobs:
         uses: actions/github-script@0.4.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
           script: |
             const {owner: owner, repo: repo} = context.repo;
             const tag = "${{ github.ref }}".replace("refs/tags/", "")
@@ -34,14 +35,14 @@ jobs:
                 repo: repo,
                 tag: tag
               });
-              return release;
+              return release.upload_url;
             } catch (e) {
               const {data: createdRelease} = await github.repos.createRelease({
                 owner: owner,
                 repo: repo,
                 tag_name: tag
               });
-              return createdRelease;
+              return createdRelease.upload_url;
             }
       - name: Debug
         run: |
@@ -51,7 +52,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.result.upload_url }}
+          upload_url: ${{ steps.create-release.outputs.result }}
           asset_path: ${{ matrix.id }}.tar.gz
           asset_name: ${{ matrix.id }}.tar.gz
           asset_content_type: application/gzip
