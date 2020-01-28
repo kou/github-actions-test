@@ -28,20 +28,21 @@ jobs:
           script: |
             const {owner: owner, repo: repo} = context.repo;
             const tag = "${{ github.ref }}".replace("refs/tags/", "")
-            const {data: release} = await github.repos.getReleaseByTag({
-              owner: owner,
-              repo: repo,
-              tag: tag
-            });
-            if (release) {
+            try {
+              const {data: release} = await github.repos.getReleaseByTag({
+                owner: owner,
+                repo: repo,
+                tag: tag
+              });
               return release;
+            } catch (e) {
+              const {data: createdRelease} = await github.repos.createRelease({
+                owner: owner,
+                repo: repo,
+                tag_name: tag
+              });
+              return createdRelease;
             }
-            const {data: createdRelease} = await github.repos.createRelease({
-              owner: owner,
-              repo: repo,
-              tag_name: tag
-            });
-            return createdRelease;
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
