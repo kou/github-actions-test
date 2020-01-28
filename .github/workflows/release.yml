@@ -15,10 +15,10 @@ jobs:
     steps:
       - name: Create assets
         run: |
-          touch {{ matrix.id }}.txt
+          touch ${{ matrix.id }}.txt
           mkdir -p sub
-          touch sub/{{ matrix.id }}.txt
-          tar czf {{ matrix.id }}.tar.gz {{ matrix.id }}.txt sub
+          touch sub/${{ matrix.id }}.txt
+          tar czf ${{ matrix.id }}.tar.gz ${{ matrix.id }}.txt sub
       - name: Create release
         id: create-release
         uses: actions/create-release@v1.0.0
@@ -33,6 +33,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: {{ matrix.id }}.tar.gz
-          asset_name: {{ matrix.id }}.tar.gz
+          asset_path: ${{ matrix.id }}.tar.gz
+          asset_name: ${{ matrix.id }}.tar.gz
           asset_content_type: application/gzip
