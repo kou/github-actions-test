@@ -28,10 +28,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
+            const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
             const fs = require("fs");
             const path = ".github/workflows/ensure-creating-release.js";
             const script = fs.readFileSync(path).toString();
-            eval(script);
+            const function = new AsyncFunction("require", "github", "context", script);
+            await function(require, github, context);
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
