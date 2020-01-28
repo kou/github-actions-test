@@ -1,5 +1,6 @@
 const {owner: owner, repo: repo} = context.repo;
-const tag = github.ref.replace("refs/tags/", "")
+console.log(context);
+const tag = context.ref.replace("refs/tags/", "")
 try {
   const {data: release} = await github.repos.getReleaseByTag({
     owner: owner,
