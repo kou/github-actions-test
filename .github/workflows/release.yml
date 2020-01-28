@@ -6,14 +6,19 @@ on:
 jobs:
   test:
     name: Test
+    strategy:
+      matrix:
+        id:
+          - hello1
+          - hello2
     runs-on: ubuntu-latest
     steps:
       - name: Create assets
         run: |
-          touch hello.txt
+          touch {{ matrix.id }}.txt
           mkdir -p sub
-          touch sub/hello.txt
-          tar czf hello.tar.gz hello.txt sub
+          touch sub/{{ matrix.id }}.txt
+          tar czf {{ matrix.id }}.tar.gz {{ matrix.id }}.txt sub
       - name: Create release
         id: create-release
         uses: actions/create-release@v1.0.0
@@ -28,6 +33,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: hello.tar.gz
-          asset_name: hello.tar.gz
+          asset_path: {{ matrix.id }}.tar.gz
+          asset_name: {{ matrix.id }}.tar.gz
           asset_content_type: application/gzip
