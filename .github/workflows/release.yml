@@ -19,20 +19,34 @@ jobs:
           mkdir -p sub
           touch sub/${{ matrix.id }}.txt
           tar czf ${{ matrix.id }}.tar.gz ${{ matrix.id }}.txt sub
-      - name: Create release
+      - name: Ensure creating release
         id: create-release
-        uses: actions/create-release@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@master
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const {owner: owner, repo: repo} = context.repo;
+            const {data: releases} = await github.repos.listRelease({
+              owner: owner,
+              repo: repo,
+            });
+            const release = releases.find((release) => {
+              release.tag_name == "${{ github.ref }}";
+            });
+            if (release) {
+              return release;
+            }
+            return github.repos.createRelease({
+              owner: owner,
+              repo: repo,
+              tag_name: "${{ github.ref }}";
+            });
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          upload_url: ${{ steps.create-release.result.upload_url }}
           asset_path: ${{ matrix.id }}.tar.gz
           asset_name: ${{ matrix.id }}.tar.gz
           asset_content_type: application/gzip
