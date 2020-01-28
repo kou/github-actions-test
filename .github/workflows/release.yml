@@ -40,7 +40,7 @@ jobs:
               return await github.repos.createRelease({
                 owner: owner,
                 repo: repo,
-                tag_name: "${{ github.ref }}";
+                tag_name: "${{ github.ref }}"
               });
             })();
       - name: Upload release
