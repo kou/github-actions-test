@@ -31,22 +31,18 @@ jobs:
               owner: owner,
               repo: repo,
             });
-            console.log(releases);
             const release = releases.find((release) => {
               release.tag_name === "${{ github.ref }}";
             });
             if (release) {
               return release;
             }
-            return await github.repos.createRelease({
+            const {data: createdRelease} = await github.repos.createRelease({
               owner: owner,
               repo: repo,
               tag_name: "${{ github.ref }}".replace("refs/tags/", "")
             });
-      - name: Show output
-        run: |
-          echo "${{ toJson(steps.create-release) }}"
-          echo "${{ steps.create-release.outputs.result }}"
+            return createdRelease;
       - name: Upload release
         uses: actions/upload-release-asset@v1.0.1
         env:
