@@ -14,10 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@master
         if: |
-          startsWith('refs/tags/', github.ref)
+          startsWith(github.ref, 'refs/tags/')
       - name: Create assets
         if: |
-          startsWith('refs/tags/', github.ref)
+          startsWith(github.ref, 'refs/tags/ )
         run: |
           touch ${{ matrix.id }}.txt
           mkdir -p sub
@@ -25,7 +25,7 @@ jobs:
           tar czf ${{ matrix.id }}.tar.gz ${{ matrix.id }}.txt sub
       - name: Ensure creating release
         if: |
-          startsWith('refs/tags/', github.ref)
+          startsWith(github.ref, 'refs/tags/')
         id: create-release
         uses: actions/github-script@0.4.0
         with:
@@ -40,7 +40,7 @@ jobs:
             return await func(require, github, context);
       - name: Upload release
         if: |
-          startsWith('refs/tags/', github.ref)
+          startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
