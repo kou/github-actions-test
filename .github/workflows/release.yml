@@ -12,6 +12,8 @@ jobs:
           - hello2
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo "${{ github.ref }}"
       - uses: actions/checkout@master
         if: |
           startsWith(github.ref, 'refs/tags/')
