@@ -11,6 +11,11 @@ jobs:
           Get-Culture
           [CultureInfo]::CurrentCulture = "ja-JP"
           Get-Culture
+      - name: Set locale
+        run: |
+          Set-WinSystemLocale ja-JP
+          Start-Sleep -s 10
+          Restart-Computer
       - name: Set system culture
         run: |
           Get-Culture
