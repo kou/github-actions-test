@@ -1,0 +1,14 @@
+name: Expression
+on:
+  push:
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          set -x
+          echo "${{ github.ref }}"
+          echo "${{ github.head_ref }}"
+          echo "${{ github.sha }}"
+          echo "${{ github.head_ref || github.sha }}"
